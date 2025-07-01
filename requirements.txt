@@ -1,6 +1,5 @@
 flask
-gunicorn
 flask-cors
+gunicorn
 opencv-python
 mediapipe
-requests
