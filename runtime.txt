@@ -1,0 +1,4 @@
+echo python-3.10.13 > runtime.txt
+git add runtime.txt
+git commit -m "Add Python 3.10 runtime for Mediapipe compatibility"
+git push origin main
