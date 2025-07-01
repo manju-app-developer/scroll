@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gesture Scroll Controller</title>
+  <style>
+    :root {
+      --on-color: #00c853;
+      --off-color: #d50000;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f3f4f6, #e0f7fa);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background: #1e88e5;
+      color: white;
+      border: none;
+      padding: 14px 36px;
+      font-size: 1.1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #1565c0;
+      transform: scale(1.05);
+    }
+
+    #status {
+      font-size: 1.4rem;
+      margin-top: 24px;
+      font-weight: 500;
+    }
+
+    .status-icon {
+      font-size: 3rem;
+      margin-top: 14px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.6; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Gesture Scroll Controller</h1>
+  <button onclick="toggleGesture()">Toggle Gesture</button>
+  <div id="status">Checking status...</div>
+  <div class="status-icon" id="icon">⏳</div>
+
+  <script>
+    // 💡 Replace this with your actual Render backend URL:
+    const backendUrl = 'https://scroll-ohh0.onrender.com';
+
+    function updateStatus(enabled) {
+      document.getElementById('status').innerText = enabled
+        ? '🟢 Gesture Scroll: ON'
+        : '🔴 Gesture Scroll: OFF';
+      document.getElementById('icon').innerText = enabled ? '🖐️' : '✋';
+      document.getElementById('icon').style.color = enabled ? 'var(--on-color)' : 'var(--off-color)';
+    }
+
+    function toggleGesture() {
+      fetch(`${backendUrl}/toggle`, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => updateStatus(data.enabled))
+        .catch(() => {
+          document.getElementById('status').innerText = '⚠️ Server not reachable';
+          document.getElementById('icon').innerText = '❌';
+        });
+    }
+
+    function fetchStatus() {
+      fetch(`${backendUrl}/status`)
+        .then(res => res.json())
+        .then(data => updateStatus(data.enabled))
+        .catch(() => {
+          document.getElementById('status').innerText = '⚠️ Cannot fetch status';
+          document.getElementById('icon').innerText = '❌';
+        });
+    }
+
+    window.onload = fetchStatus;
+  </script>
+</body>
+</html>
